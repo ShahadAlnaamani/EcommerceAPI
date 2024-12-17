@@ -23,13 +23,13 @@ namespace EcommerceTask.Models
         public string Password { get; set; }
 
         [Required]
-        [RegularExpression(@"^\\+?[1-9][0-9]{7,14}$")]
+       // [RegularExpression(@"^\\+?[1-9][0-9]{7,14}$")]
         public string PhoneNumber { get; set; }
 
         public Role Role { get; set; }
         public bool AccountActive {  get; set; }
 
-        public DateTime ModifiedAt { get; set; }
+        public DateTime Created { get; set; }
 
         public DateTime LastUpdatedAt { get; set;}
 
