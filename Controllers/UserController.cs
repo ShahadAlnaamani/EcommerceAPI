@@ -91,14 +91,8 @@ namespace EcommerceTask.Controllers
         {
             try
             {
-                // Checking if request is being done by an admin
-                var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  
+                return Ok(_userService.GetAllUsers()); //returns all users DTO information
 
-                if (userRole == "Admin") //Actually an admin
-                {
-                    return Ok(_userService.GetAllUsers()); //returns all users DTO information
-                }
-                else  return Unauthorized("<!>This function is only available for admins<!>"); //Not admin will return error message 
             }
             catch (Exception ex)
             {
@@ -111,21 +105,14 @@ namespace EcommerceTask.Controllers
         [HttpPost("ADMIN: AddAdmin")]
         public IActionResult AddAdmin(UserInDTO user)
         {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Checking if request is being done by an admin
-
-            if (userRole == "Admin") //Current user is admin 
+            try
             {
-                try
-                {
-                    return Ok(_userService.AddAdmin(user)); //Creating new admin
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return Ok(_userService.AddAdmin(user)); //Creating new admin
             }
-
-            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -133,51 +120,36 @@ namespace EcommerceTask.Controllers
         [HttpGet("ADMIN: GetUserByID {ID}")]
         public IActionResult GetUserByID(int ID)
         {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Checking if request is being done by an admin
-
-            if (userRole == "Admin") //Current user is admin 
+            try
             {
-
-                try
-                {
-                    var users = _userService.GetUserByID(ID); //Getting user 
-
-                    if (users == null) return BadRequest("<!>No users with this ID<!>");
-                    else return Ok(users);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                var users = _userService.GetUserByID(ID); //Getting user 
+                
+                if (users == null) return BadRequest("<!>No users with this ID<!>");
+                else return Ok(users);
             }
-
-            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
-
+            
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
 
         //Allows admins to search for specific accounts using name (only authenticated admin accounts can use this function) [Returns user DTO]
         [HttpGet("ADMIN: GetUserByName {Name}")]
         public IActionResult GetUserByName(string Name)
         {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Checking if request is being done by an admin
-
-            if (userRole == "Admin") //Current user is admin 
+            try
             {
+                var users =  _userService.GetUserByName(Name); //Getting user 
 
-                try
-                {
-                    var users =  _userService.GetUserByName(Name); //Getting user 
-
-                    if (users == null) return BadRequest("<!>No users with this name<!>");
-                    else return Ok(users);  
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                if (users == null) return BadRequest("<!>No users with this name<!>");
+                else return Ok(users);  
             }
-
-            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 
@@ -185,26 +157,17 @@ namespace EcommerceTask.Controllers
         [HttpGet("ADMIN: GetUserByPhoneNo {PhoneNo}")]
         public IActionResult GetUserByPhoneNo(string phone)
         {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Checking if request is being done by an admin
-
-            if (userRole == "Admin") //Current user is admin 
+            try
             {
+                var users = _userService.GetUserByPhoneNo(phone); //Getting user 
 
-                try
-                {
-                    var users = _userService.GetUserByPhoneNo(phone); //Getting user 
-
-                    if (users == null) return BadRequest("<!>No users with this phone number<!>");
-                    else return Ok(users);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                if (users == null) return BadRequest("<!>No users with this phone number<!>");
+                else return Ok(users);
             }
-
-            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
-
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //------------------------------Function that generates unique JWT tokens----------------------------//

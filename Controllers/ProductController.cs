@@ -22,36 +22,26 @@ namespace EcommerceTask.Controllers
         [Authorize(Roles = "Admin")] //Ensures that specific functions are only used by admins 
         [HttpPost("ADMIN: AddProduct")]
         public IActionResult AddProduct(ProductInDTO product)
-        {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Checking if request is being done by an admin
-            var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;  // Checking if request is being done by an admin
+        { 
+            var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;  // used to document who made changes
 
-            if (userRole == "Admin")
+            try
             {
-                try
-                {
-                    return Ok(_productService.AddProduct(product, int.Parse(userID)));
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return Ok(_productService.AddProduct(product, int.Parse(userID)));
             }
-            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize(Roles = "Admin")] //Ensures that specific functions only used by admins
         [HttpPost("ADMIN: Update product")]
         public IActionResult UpdateProduct(ProductInDTO update)
         {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Checking if request is being done by an admin
-            var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;  // Checking if request is being done by an admin
+            var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;  // used to document who made changes
 
-            if (userRole == "Admin")
-            {
-                return Ok(_productService.UpdateProduct(update, int.Parse(userID)));
-            }
-            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
+            return Ok(_productService.UpdateProduct(update, int.Parse(userID)));
         }
 
         [AllowAnonymous]
