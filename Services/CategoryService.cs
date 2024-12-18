@@ -26,6 +26,11 @@ namespace EcommerceTask.Services
             else return catID;
         }
 
+        public string GetCategoryName(int ID)
+        {
+            return _categoryrepository.GetCategoryNameByID(ID);
+        }
+
         public List<Category> GetAllCategories()
         {
             return _categoryrepository.GetCategories();

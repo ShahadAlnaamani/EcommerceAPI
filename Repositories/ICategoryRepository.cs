@@ -7,5 +7,6 @@ namespace EcommerceTask.Repositories
         int AddCategory(Category category);
         List<Category> GetCategories();
         int GetCategoryByName(string categoryName);
+        string GetCategoryNameByID(int catID);
     }
 }

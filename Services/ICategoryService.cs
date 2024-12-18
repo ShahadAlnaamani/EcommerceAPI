@@ -7,5 +7,6 @@ namespace EcommerceTask.Services
         int AddCategory(Category category);
         List<Category> GetAllCategories();
         int GetCategoryID(string name);
+        string GetCategoryName(int ID);
     }
 }

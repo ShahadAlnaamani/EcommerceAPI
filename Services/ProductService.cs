@@ -8,18 +8,22 @@ namespace EcommerceTask.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productrepository;
+        private readonly ICategoryService _categoryservice;
 
-        public ProductService(IProductRepository productrepo)
+        public ProductService(IProductRepository productrepo, ICategoryService categoryservice)
         {
             _productrepository = productrepo;
+            _categoryservice = categoryservice;
         }
 
         public int AddProduct(ProductInDTO product, int AdminID)
         {
-            //if category not found - add new category
-            //int category = CategoryFinder(product.CategoryName);
+            int category = _categoryservice.GetCategoryID(product.CategoryName);
 
-            int category = 0; //*
+            if (category == 0 || category == null)
+            {
+                return 0; //category not found
+            }
 
             var NewProd = new Product
             {
@@ -36,14 +40,11 @@ namespace EcommerceTask.Services
             return _productrepository.AddProduct(NewProd);
         }
 
-        //public int CategoryFinder(string categoryName)
-        //{ int CatID = _categoryserive.GetCategoryByName(categoryName);}
 
         public int UpdateProduct(ProductInDTO product, int AdminID)
         {
             int ProdID = _productrepository.GetProductByName(product.Name);
-            //int CatID = CategoryFinder(product.CatName);
-            int CatID = 0;
+            int CatID = _categoryservice.GetCategoryID(product.CategoryName);
 
             if (ProdID != 0 || ProdID != null)
             {
@@ -69,8 +70,8 @@ namespace EcommerceTask.Services
             //Mapping prod -> prodOutDTO
             foreach (var prod in products)
             {
-                //string CategoryName = _productrepository.CategoryFinder(prod.CatId);
-                string CategoryName = " ";
+                string CategoryName = _categoryservice.GetCategoryName(prod.CatId);
+
                 var output = new ProductOutDTO
                 {
                     PID = prod.PID,
@@ -94,6 +95,9 @@ namespace EcommerceTask.Services
             string prodName = null;
             var products = new List<Product>();
 
+            
+
+
             if (filter.rating != 0 && filter.rating != null)
             {
                 rating = filter.rating;
@@ -102,21 +106,24 @@ namespace EcommerceTask.Services
                 {
                     catName = filter.CategoryName;
 
+                    int CatID = _categoryservice.GetCategoryID(filter.CategoryName);
+
+                    if (CatID == 0 || CatID == null)
+                    { throw new Exception("<!>Invalid category<!>"); }
+
                     if (filter.ProductName != null)
                     {
                         prodName = filter.ProductName;
-                        //need to get cat ID 
-                        //products = _productrepository.GetProducts(filter.Page, filter.PageSize, rating, prodName, catName);
+                        products = _productrepository.GetProducts(filter.Page, filter.PageSize, rating, prodName, CatID);
                     }
                     //Gets products filtered by Rating and category name 
-                    products = _productrepository.GetProducts(filter.Page, filter.PageSize, rating, catName);
+                    products = _productrepository.GetProducts(filter.Page, filter.PageSize, rating, CatID);
                 }
 
                 if (filter.ProductName != null)
                 {
                     prodName = filter.ProductName;
-                    //need to get cat ID 
-                    //products = _productrepository.GetProducts(filter.Page, filter.PageSize, rating, prodName, catName );
+                    products = _productrepository.GetProducts(filter.Page, filter.PageSize, rating, prodName);
                 }
                 products = _productrepository.GetProducts(filter.Page, filter.PageSize, rating);
 
@@ -131,14 +138,18 @@ namespace EcommerceTask.Services
                     rating = filter.rating;
                     products = _productrepository.GetProducts(filter.Page, filter.PageSize, rating, prodName);
                 }
-                //need to get cat ID 
-                //products = _productrepository.GetProducts(filter.Page, filter.PageSize, prodName, catName);
+                products = _productrepository.GetProducts(filter.Page, filter.PageSize, prodName);
             }
 
             else if (filter.CategoryName != null)
             {
                 catName = filter.CategoryName;
-                products = _productrepository.GetProducts(filter.Page, filter.PageSize, catName);
+                int CatID = _categoryservice.GetCategoryID(filter.CategoryName);
+
+                if (CatID == 0 || CatID == null)
+                { throw new Exception("<!>Invalid category<!>"); }
+
+                products = _productrepository.GetProducts(filter.Page, filter.PageSize, CatID);
             }
 
             else
@@ -149,8 +160,8 @@ namespace EcommerceTask.Services
         public ProductOutDTO GetProductByID(int ID)
         {
             var product = _productrepository.GetProductByID(ID);
-            //string CategoryName = _productrepository.CategoryFinder(prod.CatId);
-            string CategoryName = " ";
+            string CategoryName = _categoryservice.GetCategoryName(product.CatId);
+
 
             var output = new ProductOutDTO
             {

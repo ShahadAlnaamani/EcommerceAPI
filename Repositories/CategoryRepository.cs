@@ -25,6 +25,12 @@ namespace EcommerceTask.Repositories
             return cat.CID;
         }
 
+        public string GetCategoryNameByID(int catID)
+        {
+            var cat = _context.Categories.FirstOrDefault(c => c.CID == catID);
+            return cat.CategoryName;
+        }
+
         public List<Category> GetCategories()
         {
             return _context.Categories.ToList();
