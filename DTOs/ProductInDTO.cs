@@ -20,8 +20,5 @@ namespace EcommerceTask.DTOs
         [Required]
         [Range(minimum: 0, maximum: int.MaxValue)]
         public int Stock { get; set; }
-
-        [DefaultValue (true)]
-        public bool ProductActive { get; set; }
     }
 }

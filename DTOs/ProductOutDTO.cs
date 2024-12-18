@@ -12,9 +12,7 @@ namespace EcommerceTask.DTOs
 
         public string Description { get; set; }
 
-        [Required]
-        [ForeignKey("Category")]
-        public int CatId { get; set; }
+        public string Category { get; set; }
 
         public decimal Price { get; set; }
 
