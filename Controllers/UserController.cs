@@ -98,7 +98,7 @@ namespace EcommerceTask.Controllers
                 {
                     return Ok(_userService.GetAllUsers()); //returns all users DTO information
                 }
-                else  return BadRequest("<!>This function is only available for admins<!>"); //Not admin will return error message 
+                else  return Unauthorized("<!>This function is only available for admins<!>"); //Not admin will return error message 
             }
             catch (Exception ex)
             {
@@ -125,7 +125,7 @@ namespace EcommerceTask.Controllers
                 }
             }
 
-            else return BadRequest("<!>This function is only available for admins<!>"); //Current user is not admin
+            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
         }
 
 
@@ -151,7 +151,7 @@ namespace EcommerceTask.Controllers
                 }
             }
 
-            else return BadRequest("<!>This function is only available for admins<!>"); //Current user is not admin
+            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
 
         }
 
@@ -177,7 +177,7 @@ namespace EcommerceTask.Controllers
                 }
             }
 
-            else return BadRequest("<!>This function is only available for admins<!>"); //Current user is not admin
+            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
 
         }
 
@@ -203,7 +203,7 @@ namespace EcommerceTask.Controllers
                 }
             }
 
-            else return BadRequest("<!>This function is only available for admins<!>"); //Current user is not admin
+            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
 
         }
 
