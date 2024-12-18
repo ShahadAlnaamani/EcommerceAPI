@@ -19,22 +19,32 @@ namespace EcommerceTask.Services
         }
 
         //Adding new user, converts userInDTO --> User
-        public int AddUser(UserInDTO user)
+        public int AddUser(UserInDTO Newuser)
         {
             //var hashed = PassHasher(admin.Password);
 
-            var Newuser = new User
+            var users = _userrepository.GetAllUsers();
+
+            foreach (var user in users)
             {
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-                PhoneNumber = user.PhoneNumber,
+                if (user.Email == Newuser.Email)
+                {
+                    throw new Exception("<!>This email is already in use please try another one<!>");
+                }
+            }
+
+            var FinalUser = new User
+            {
+                Name = Newuser.Name,
+                Email = Newuser.Email,
+                Password = Newuser.Password,
+                PhoneNumber = Newuser.PhoneNumber,
                 Role = Role.NormalUser,
                 AccountActive = true,
                 Created = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow,
             };
-            return _userrepository.AddUser(Newuser);
+            return _userrepository.AddUser(FinalUser);
         }
 
         
@@ -101,16 +111,26 @@ namespace EcommerceTask.Services
 
 
         //Add new admin UserInDTO --> User
-        public int AddAdmin(UserInDTO admin)
+        public int AddAdmin(UserInDTO Newadmin)
         {
             //var hashed = PassHasher(admin.Password);
 
+            var admins = _userrepository.GetAllUsers();
+
+            foreach (var admin in admins)
+            {
+                if (admin.Email == Newadmin.Email)
+                {
+                    throw new Exception("<!>This email is already in use please try another one<!>");
+                }
+            }
+
             var user = new User
             {
-                Name = admin.Name,
-                Email = admin.Email,
-                Password = admin.Password,
-                PhoneNumber = admin.PhoneNumber,
+                Name = Newadmin.Name,
+                Email = Newadmin.Email,
+                Password = Newadmin.Password,
+                PhoneNumber = Newadmin.PhoneNumber,
                 Role = Role.Admin,
                 AccountActive = true,
                 Created = DateTime.UtcNow,
