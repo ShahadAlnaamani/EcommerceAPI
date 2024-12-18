@@ -185,6 +185,11 @@ namespace EcommerceTask.Services
             return _productrepository.GetProductByName(name);
         }
 
+        public string GetProductNameByID(int ID)
+        {
+            return _productrepository.GetProductNameByID(ID);
+        }
+
         public bool UpdateAfterOrder(ProductInDTO product, int prodID)
         {
             return _productrepository.UpdateAfterOrder(product, prodID);

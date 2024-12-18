@@ -6,5 +6,6 @@ namespace EcommerceTask.Services
     {
         bool AddNewProduct_Order(int OrederID, int productID, int Qty);
         List<Order_Product> ViewOrderProds();
+        List<Order_Product> GetOrderProdsByOrderID(int productID);
     }
 }

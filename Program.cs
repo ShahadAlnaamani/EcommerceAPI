@@ -76,12 +76,14 @@ namespace EcommerceTask
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IOrder_ProductRepository, Order_ProductRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IOrder_ProductService, Order_ProductService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
 
             builder.Services.AddControllers();

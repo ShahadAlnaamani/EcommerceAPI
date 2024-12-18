@@ -29,5 +29,10 @@ namespace EcommerceTask.Services
             return _order_productrepository.GetAllOrderProds();
         }
 
+        public List<Order_Product> GetOrderProdsByOrderID(int orderID)
+        {
+            return _order_productrepository.GetOrderProdsByOrderID(orderID);
+        }
+
     }
 }

@@ -24,5 +24,10 @@ namespace EcommerceTask.Repositories
             return _context.Order_Products.ToList();
         }
 
+        public List<Order_Product> GetOrderProdsByOrderID(int orderID) 
+        {
+            return _context.Order_Products.Where(op => op.OrderID == orderID).ToList();
+        }
+
     }
 }

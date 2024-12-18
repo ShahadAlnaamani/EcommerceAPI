@@ -7,7 +7,7 @@ namespace EcommerceTask.DTOs
     {
         public int RID { get; set; }
 
-        public string UserName { get; set; }
+        public int UserID { get; set; }
 
         public string ProductName { get; set; }
 

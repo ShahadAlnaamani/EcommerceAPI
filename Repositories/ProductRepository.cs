@@ -63,6 +63,12 @@ namespace EcommerceTask.Repositories
             else return false; //Product not found 
         }
 
+        public string GetProductNameByID(int ID)
+        {
+            var product = GetProductByID(ID);
+            return product.Name;
+        }
+
         //------------------------------------Searching products--------------------------------------//
 
         //Get all products [returns list of products]

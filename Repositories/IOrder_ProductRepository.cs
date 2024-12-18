@@ -6,5 +6,6 @@ namespace EcommerceTask.Repositories
     {
         bool AddProduct_Order(Order_Product Ord_Prod);
         List<Order_Product> GetAllOrderProds();
+        List<Order_Product> GetOrderProdsByOrderID(int orderID);
     }
 }

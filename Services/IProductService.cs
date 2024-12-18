@@ -12,6 +12,7 @@ namespace EcommerceTask.Services
         int UpdateProduct(ProductInDTO product, int AdminID);
         int GetProductIDByName(string name);
         bool UpdateAfterOrder(ProductInDTO product, int prodID);
+        string GetProductNameByID(int ID);
 
     }
 }
