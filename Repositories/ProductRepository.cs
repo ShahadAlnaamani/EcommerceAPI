@@ -21,7 +21,7 @@ namespace EcommerceTask.Repositories
         }
 
         //Update product details [returns false product not found, true successful update]
-        public bool UpdateProduct(ProductInDTO newprod, int ProdID, int Category)
+        public bool UpdateProduct(ProductInDTO newprod, int ProdID, int Category, int AdminID)
         {
             var oldprod = _context.Products.FirstOrDefault(p => p.PID == ProdID);
 
@@ -34,6 +34,8 @@ namespace EcommerceTask.Repositories
                 oldprod.CatId = Category;
                 oldprod.Stock = newprod.Stock;
                 oldprod.ProductActive = true;
+                oldprod.Modifiedt = DateTime.Now;
+                oldprod.ModifiedBy = AdminID;
 
                 _context.Products.Update(oldprod);
                 _context.SaveChanges();
@@ -43,9 +45,26 @@ namespace EcommerceTask.Repositories
             else return false; //Product not found 
         }
 
+        public bool UpdateAfterOrder(ProductInDTO newprod, int ProdID)
+        {
+            var oldprod = _context.Products.FirstOrDefault(p => p.PID == ProdID);
 
-        //------------------------------------Getting all products--------------------------------------//
-       
+            //Updating details on the original product with new details
+            if (oldprod != null)
+            {
+                oldprod.Stock = newprod.Stock;
+                oldprod.Modifiedt = DateTime.Now;
+
+                _context.Products.Update(oldprod);
+                _context.SaveChanges();
+                return true; //Updated successfully
+            }
+
+            else return false; //Product not found 
+        }
+
+        //------------------------------------Searching products--------------------------------------//
+
         //Get all products [returns list of products]
         public List<Product> GetProducts(int page, int pageSize)
         {

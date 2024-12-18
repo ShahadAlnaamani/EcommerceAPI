@@ -16,6 +16,7 @@ namespace EcommerceTask.Repositories
         List<Product> GetProducts(int page, int pageSize, int catID, string prodName, int rating);
         int GetProductByName(string Name);
         List<Product> GetProducts(int page, int PageSize);
-        bool UpdateProduct(ProductInDTO newprod, int ProdID, int Category);
+        bool UpdateProduct(ProductInDTO newprod, int ProdID, int Category, int AdminID);
+        bool UpdateAfterOrder(ProductInDTO newprod, int ProdID);
     }
 }

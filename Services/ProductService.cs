@@ -50,7 +50,7 @@ namespace EcommerceTask.Services
             {
                 if (CatID != 0 || CatID != null)
                 {
-                    bool updated = _productrepository.UpdateProduct(product, ProdID, CatID);
+                    bool updated = _productrepository.UpdateProduct(product, ProdID, CatID, AdminID);
 
                     if (updated) return 0; //successful no errors
                     else return 3; //not updated error occured 
@@ -173,6 +173,21 @@ namespace EcommerceTask.Services
             };
 
             return output;
+        }
+
+        public Product GetFullProductByID(int ID)
+        {
+            return _productrepository.GetProductByID(ID);
+        }
+
+        public int GetProductIDByName(string name)
+        {
+            return _productrepository.GetProductByName(name);
+        }
+
+        public bool UpdateAfterOrder(ProductInDTO product, int prodID)
+        {
+            return _productrepository.UpdateAfterOrder(product, prodID);
         }
     }
 }
