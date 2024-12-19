@@ -9,36 +9,32 @@ namespace EcommerceTask.Services
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _reviewrepository;
-        private readonly IProductService _productservice;
-        private readonly IOrderService _orderservice;
-        private readonly IOrder_ProductService _orderproductservice;
+        private readonly IHybridService _hybridservice;
 
 
-        public ReviewService(IReviewRepository reviewrepo, IProductService productservice, IOrderService orderservice, IOrder_ProductService orderprodservice)
+        public ReviewService(IReviewRepository reviewrepo, IHybridService hybridservice)
         {
             _reviewrepository = reviewrepo;
-            _productservice = productservice;
-            _orderservice = orderservice;
-            _orderproductservice = orderprodservice;
+            _hybridservice = hybridservice;
         }
 
         public int AddReview(ReviewInDTO review, int userID)
         {
-            int prodID = _productservice.GetProductIDByName(review.ProductName);
+            int prodID = _hybridservice.GetProductIDByName(review.ProductName);
 
             if (prodID == 0 || prodID == null)
             {
                 throw new Exception("<!>The product name inputted does not exist<!>");
             }
 
-            var pastOrders = _orderservice.GetMyOrders(userID);
+            var pastOrders = _hybridservice.GetMyOrders(userID);
             bool valid = false;
 
             if (pastOrders != null)
             {
                 foreach (var order in pastOrders)
                 {
-                    var OrdProds = _orderproductservice.GetOrderProdsByOrderID(order.OID);
+                    var OrdProds = _hybridservice.GetOrderProdsByOrderID(order.OID);
                     foreach (var ordprod in OrdProds)
                     {
                         if (ordprod.ProductID == prodID)
@@ -62,7 +58,7 @@ namespace EcommerceTask.Services
                         Comment = review.Comment,
                         ReviewDate = DateTime.Now,
                     };
-
+                    _hybridservice.UpdateRating(prodID);
                     return _reviewrepository.AddReview(NewReview);
                 }
                 else throw new Exception("<!>It looks like you have already made a review on this product before<!>");
@@ -78,7 +74,7 @@ namespace EcommerceTask.Services
 
             foreach (var ur in userRevs)
             {
-                string name = _productservice.GetProductNameByID(ur.ProductID);
+                string name = _hybridservice.GetProductNameByID(ur.ProductID);
                 var review = new ReviewOutDTO
                 {
                     RID = ur.RID,

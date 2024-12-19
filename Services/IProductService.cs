@@ -13,6 +13,11 @@ namespace EcommerceTask.Services
         int GetProductIDByName(string name);
         bool UpdateAfterOrder(ProductInDTO product, int prodID);
         string GetProductNameByID(int ID);
+        decimal UpdateRating(int productID);
+        int AddNewProduct(Product Newproduct);
+        int GetProductByName(string name);
+        bool CompleteUpdateProduct(ProductInDTO product, int ProdID, int CatID, int AdminID);
+        List<Product> CheckFilters(ProductFilterDTO filter);
 
     }
 }

@@ -63,6 +63,14 @@ namespace EcommerceTask.Repositories
             else return false; //Product not found 
         }
 
+        //[returns new prod rating]
+        public decimal UpdateProductRating(Product product)
+        {
+            _context.Products.Update(product);
+            _context.SaveChanges();
+            return product.Rating; //Updated successfully
+        }
+
         public string GetProductNameByID(int ID)
         {
             var product = GetProductByID(ID);

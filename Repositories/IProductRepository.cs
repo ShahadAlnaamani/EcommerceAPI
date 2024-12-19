@@ -19,5 +19,6 @@ namespace EcommerceTask.Repositories
         List<Product> GetProducts(int page, int PageSize);
         bool UpdateProduct(ProductInDTO newprod, int ProdID, int Category, int AdminID);
         bool UpdateAfterOrder(ProductInDTO newprod, int ProdID);
+        decimal UpdateProductRating(Product product);
     }
 }

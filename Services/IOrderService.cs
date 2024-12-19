@@ -8,5 +8,7 @@ namespace EcommerceTask.Services
         List<Order> GetMyOrders(int userID);
         Order GetOrderByID(int userID, int OrderID);
         OrderReciptDTO NewOrder(List<OrderInDTO> orders, int userID);
+
+        int AddOrder(Order order);
     }
 }

@@ -22,42 +22,31 @@ namespace EcommerceTask.Controllers
         [HttpPost("ADMIN: AddCategory")]
         public IActionResult AddCategory(Category Category)
         {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Checking if request is being done by an admin
-
-            if (userRole == "Admin")
+            try
             {
-                try
-                {
-                    return Ok(_categoryService.AddCategory(Category));
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return Ok(_categoryService.AddCategory(Category));
             }
-            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
-
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        
         }
 
 
         [HttpGet("ADMIN: ViewCategories")]
         public IActionResult ViewCategories()
         {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;  // Checking if request is being done by an admin
-
-            if (userRole == "Admin")
+            try
             {
-                try
-                {
-                    return Ok(_categoryService.GetAllCategories());
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return Ok(_categoryService.GetAllCategories());
             }
-            else return Unauthorized("<!>This function is only available for admins<!>"); //Current user is not admin
-
+            
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
     }
 }

@@ -58,5 +58,11 @@ namespace EcommerceTask.Repositories
         {
             return _context.Users.ToList();
         }
+
+        public string GetHashedPass(string email)
+        {
+            var user = _context.Users.FirstOrDefault(u=>u.Email == email);
+            return user.Password;
+        }
     }
 }

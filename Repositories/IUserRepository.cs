@@ -10,5 +10,6 @@ namespace EcommerceTask.Repositories
         List<User> GetUsersByName(string name);
         User GetUserByPhone(string phone);
         public List<User> GetAllUsers();
+        string GetHashedPass(string email);
     }
 }

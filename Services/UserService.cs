@@ -21,7 +21,7 @@ namespace EcommerceTask.Services
         //Adding new user, converts userInDTO --> User
         public int AddUser(UserInDTO Newuser)
         {
-            //var hashed = PassHasher(admin.Password);
+            var hashed = PassHasher(Newuser.Password);
 
             var users = _userrepository.GetAllUsers();
 
@@ -51,8 +51,15 @@ namespace EcommerceTask.Services
         //Login function uses email and password [returns User]
         public User Login(string email, string password)
         {
-            //var pswd = PassHasher(password);
-            return _userrepository.GetUserByEmail(email, password);
+            var hashedpass = _userrepository.GetHashedPass(email);
+
+            bool verified = BCrypt.Net.BCrypt.Verify(password, hashedpass);
+            if (verified)
+            {
+                return _userrepository.GetUserByEmail(email, password);
+            }
+
+            else throw new UnauthorizedAccessException("<!>Invalid credentials<!>");
         }
 
 
@@ -60,8 +67,8 @@ namespace EcommerceTask.Services
         //!Not done yet - error caused bec of random salting will update!
         public string PassHasher(string password)
         {
-            // Generate a salt (bcrypt handles salting automatically)
-            //string salt = BCrypt.Net.BCrypt.GenerateSalt();
+            // Generate a salt (we will use the user token)
+            string salt = BCrypt.Net.BCrypt.GenerateSalt();
 
             // Hash the password with the salt using bcrypt
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password); //, salt
@@ -113,7 +120,7 @@ namespace EcommerceTask.Services
         //Add new admin UserInDTO --> User
         public int AddAdmin(UserInDTO Newadmin)
         {
-            //var hashed = PassHasher(admin.Password);
+            var hashed = PassHasher(Newadmin.Password);
 
             var admins = _userrepository.GetAllUsers();
 

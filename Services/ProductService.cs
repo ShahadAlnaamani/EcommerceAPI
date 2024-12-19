@@ -8,94 +8,51 @@ namespace EcommerceTask.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productrepository;
-        private readonly ICategoryService _categoryservice;
+        private readonly IHybridService _hybridService;
 
-        public ProductService(IProductRepository productrepo, ICategoryService categoryservice)
+        public ProductService(IProductRepository productrepo, ICategoryService categoryservice, IReviewService reviewservice)
         {
             _productrepository = productrepo;
-            _categoryservice = categoryservice;
         }
 
         public int AddProduct(ProductInDTO product, int AdminID)
         {
-            int category = _categoryservice.GetCategoryID(product.CategoryName);
-
-            if (category == 0 || category == null)
-            {
-                return 0; //category not found
-            }
-
-            var NewProd = new Product
-            {
-                Name = product.Name,
-                Description = product.Description,
-                CatId = category,
-                Price = product.Price,
-                Stock = product.Stock,
-                ProductActive = true,
-                Modifiedt = DateTime.Now,
-                ModifiedBy = AdminID,
-
-            };
-            return _productrepository.AddProduct(NewProd);
+            return _hybridService.AddProduct(product, AdminID);
         }
 
+        public int AddNewProduct(Product Newproduct)
+        {
+            return _productrepository.AddProduct(Newproduct);
+        }
 
         public int UpdateProduct(ProductInDTO product, int AdminID)
         {
-            int ProdID = _productrepository.GetProductByName(product.Name);
-            int CatID = _categoryservice.GetCategoryID(product.CategoryName);
-
-            if (ProdID != 0 || ProdID != null)
-            {
-                if (CatID != 0 || CatID != null)
-                {
-                    bool updated = _productrepository.UpdateProduct(product, ProdID, CatID, AdminID);
-
-                    if (updated) return 0; //successful no errors
-                    else return 3; //not updated error occured 
-                }
-                else return 2; //improper category inputted 
-            }
-            else return 1; //product not found
+            return _hybridService.UpdateProduct(product, AdminID);
         }
+
+        public int GetProductByName(string name)
+        {
+            return _productrepository.GetProductByName(name);
+        }
+
+        public bool CompleteUpdateProduct(ProductInDTO product, int ProdID, int CatID, int AdminID)
+        {
+            return _productrepository.UpdateProduct(product, ProdID, CatID, AdminID);
+        }
+
 
         //Add pagination and filtering (order by price, order by category, get by category)
         public List<ProductOutDTO> GetAllProducts(ProductFilterDTO filter)
         {
-           var products = CheckFilters(filter);
-
-            var outProds = new List<ProductOutDTO>();
-
-            //Mapping prod -> prodOutDTO
-            foreach (var prod in products)
-            {
-                string CategoryName = _categoryservice.GetCategoryName(prod.CatId);
-
-                var output = new ProductOutDTO
-                {
-                    PID = prod.PID,
-                    Name = prod.Name,
-                    Price = prod.Price,
-                    Description = prod.Description,
-                    Category = CategoryName,
-                };
-
-                outProds.Add(output);
-            }
-
-            return outProds;
+            return _hybridService.GetAllProducts(filter);
         }
 
         public List<Product> CheckFilters(ProductFilterDTO filter)
         {
-
             int rating = 0;
             string catName = null;
             string prodName = null;
             var products = new List<Product>();
-
-            
 
 
             if (filter.rating != 0 && filter.rating != null)
@@ -106,7 +63,7 @@ namespace EcommerceTask.Services
                 {
                     catName = filter.CategoryName;
 
-                    int CatID = _categoryservice.GetCategoryID(filter.CategoryName);
+                    int CatID = _hybridService.GetCategoryID(filter.CategoryName);
 
                     if (CatID == 0 || CatID == null)
                     { throw new Exception("<!>Invalid category<!>"); }
@@ -144,7 +101,7 @@ namespace EcommerceTask.Services
             else if (filter.CategoryName != null)
             {
                 catName = filter.CategoryName;
-                int CatID = _categoryservice.GetCategoryID(filter.CategoryName);
+                int CatID = _hybridService.GetCategoryID(filter.CategoryName);
 
                 if (CatID == 0 || CatID == null)
                 { throw new Exception("<!>Invalid category<!>"); }
@@ -157,10 +114,12 @@ namespace EcommerceTask.Services
             return products;
         }
 
+
+
         public ProductOutDTO GetProductByID(int ID)
         {
             var product = _productrepository.GetProductByID(ID);
-            string CategoryName = _categoryservice.GetCategoryName(product.CatId);
+            string CategoryName = _hybridService.GetCategoryName(product.CatId);
 
 
             var output = new ProductOutDTO
@@ -193,6 +152,26 @@ namespace EcommerceTask.Services
         public bool UpdateAfterOrder(ProductInDTO product, int prodID)
         {
             return _productrepository.UpdateAfterOrder(product, prodID);
+        }
+
+        public decimal UpdateRating(int productID)
+        {
+            var product = _productrepository.GetProductByID(productID);
+
+            var reviews =  _hybridService.GetAllReviewsByProdID(productID);
+
+            decimal AverageRating = 0;
+
+            foreach(var review in reviews) 
+            {
+                AverageRating += review.Rating;
+            }
+
+            AverageRating /= AverageRating;
+
+            product.Rating = AverageRating;
+
+            return _productrepository.UpdateProductRating(product);
         }
     }
 }
